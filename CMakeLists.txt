@@ -2,12 +2,12 @@ cmake_minimum_required(VERSION 3.0)
 
 project(expected)
 
-option(EXPECTED_ENABLE_TESTS "Enable tests." ON)
-option(EXPECTED_ENABLE_DOCS "Enable documentation." ON)
+option(EXPECTED_ENABLE_TESTS "Enable tests." OFF)
+option(EXPECTED_ENABLE_DOCS "Enable documentation." OFF)
 
 add_library(expected INTERFACE)
 target_sources(expected INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/tl/expected.hpp)
-target_include_directories(expected INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/tl)
+target_include_directories(expected INTERFACE ${CMAKE_CURRENT_SOURCE_DIR})
 
 # Prepare "Catch" library for other executables
 set(CATCH_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/test)
@@ -26,6 +26,8 @@ if(EXPECTED_ENABLE_TESTS)
                    ${CMAKE_CURRENT_SOURCE_DIR}/tests/constructors.cpp)
 
   add_executable(tests ${TEST_SOURCES})
+  target_compile_options(tests
+          PRIVATE -Wno-unused-but-set-variable -Wno-return-type)
 
   target_link_libraries(tests Catch expected)
 
